@@ -52,7 +52,9 @@ int disturbLinesize() default 4;
 
 ## 3，代码原理
 
-核心代码 RetuenCaptchReturnValueHandler 类， 实现了返回参数处理器
+### 核心代码 
+
+RetuenCaptchReturnValueHandler 类， 实现了返回参数处理器
 
 ```java
 public class RetuenCaptchReturnValueHandler implements HandlerMethodReturnValueHandler {
@@ -104,7 +106,7 @@ public void handleReturnValue(Object returnValue, MethodParameter returnType, Mo
 	response.getOutputStream().close();
 }}
 ```
-将其加入 webMVC配置 里面
+### 将其加入 webMVC配置 里面
 
 ```java
 public class CaptchaWebMvcConfiguation implements WebMvcConfigurer {
@@ -131,3 +133,45 @@ public class CaptchaWebMvcConfiguation implements WebMvcConfigurer {
 		}
 	}}
 ```
+
+
+
+### 在使用application.properties  文件配置开启
+
+```java
+@Configuration
+@EnableConfigurationProperties(CaptchaAutoConfigure.class)
+@ConfigurationProperties("com.ducheng.captcha")
+public class CaptchaAutoConfigure {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(CaptchaAutoConfigure.class);
+	
+	private boolean enable = true;
+
+	public boolean isEnable() {
+		return enable;
+	}
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
+	@Bean
+	public WebMvcConfigurer excelWebMvcConfigurer() {
+		CaptchaWebMvcConfiguation configurer = new CaptchaWebMvcConfiguation();
+		configurer.setEnable(this.enable);
+		LOGGER.info("初始化 验证码 web 容器");
+		return configurer;
+	}
+}
+```
+
+在application 默认是开启的
+
+com.ducheng.captcha =false 可以关闭
+
+### spring.factories添加
+
+在[resources](https://github.com/ducheng/captcha-spring-boot-starter/tree/master/src/main/resources)/[META-INF](https://github.com/ducheng/captcha-spring-boot-starter/tree/master/src/main/resources/META-INF)/spring.factories
+
+里面添加 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+
+com.ducheng.springboot.aotoconfigure.CaptchaAutoConfigure
