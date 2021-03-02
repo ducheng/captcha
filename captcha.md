@@ -23,19 +23,23 @@ mvn clean install -DskipTests
 
 ## 1，使用测试类
 
-`@GetMapping("/index") 
+启动一个web的接口
 
-@ReturnCaptcha(codeNumber = 6,disturbLinesize = 60) 
+```java
+@GetMapping（“ / index”）
+@ReturnCaptcha（codeNumber = 6，disturbLinesize = 60）
+public Captcha getindex（）{
+    return Captcha.LINE;
+}
+```
 
-public Captcha getindex() {
 
- return Captcha.LINE; }`
 
 ## 2，注解解释
 
 Captcha 是一个枚举，有三种 可以 选择验证码的干扰方式 LineCaptcha 线段干扰 (line) CircleCaptcha 圆圈干扰(circle)，ShearCaptcha 扭曲干扰(shear) 对应的四个属性 // 长、 int lengSize() default 200;
 
-```
+```java
 // 宽、
 int widhSize() default 100;
 
